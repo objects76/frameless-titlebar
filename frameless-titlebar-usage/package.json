@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "cross-env ELECTRON_START_URL=http://localhost:3600 electron .",
-    "dist": "yarn build && electron-builder ."
+    "dist": "yarn build && electron-builder"
   },
   "eslintConfig": {
     "extends": "react-app"
