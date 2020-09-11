@@ -10,6 +10,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "electron-updater": "^4.3.4",
     "frameless-titlebar": "^2.1.3",
     "is-electron": "^2.2.0",
     "notistack": "^1.0.0",
@@ -22,8 +23,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "cross-env ELECTRON_START_URL=http://localhost:3600 electron .",
-    "dist": "yarn build && electron-builder"
+    "dev": "wait-on http://localhost:3600 && cross-env ELECTRON_START_URL=http://localhost:3600 electron .",
+    "dist": "electron-builder --win --publish never",
+    "ship": "electron-builder --win --publish always",
+    "predist": "yarn build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,13 +46,18 @@
   "devDependencies": {
     "cross-env": "^7.0.2",
     "electron": "^10.1.1",
-    "electron-builder": "^22.8.0"
+    "electron-builder": "^22.8.0",
+    "wait-on": "^5.2.0"
   },
   "build": {
+    "appId": "com.jjkim.framelesstitlebar",
     "extends": null,
     "directories": {
       "buildResources": "public"
     },
-    "target": "zip"
+    "target": "zip",
+    "publish": {
+      "provider": "github"
+    }
   }
 }

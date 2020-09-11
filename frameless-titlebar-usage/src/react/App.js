@@ -6,6 +6,8 @@ import icon from "./icons/vscode-256.png";
 import Notification from "./components/notification";
 import { useMenu } from "./menu";
 
+const { getDesktopStream } = require("../screenshot");
+
 let elecWindow = null;
 if (require("is-electron")()) {
   if (!window.remote) {
@@ -84,7 +86,7 @@ const App = ({ theme, setPalette }) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const defaultMenu = useMenu(enqueueSnackbar);
-
+  // const stream = await getDesktopStream("Screen 1");
   return (
     <div
       className="Container"
@@ -96,16 +98,10 @@ const App = ({ theme, setPalette }) => {
         platform={process.platform} // win32, darwin, linux
         menu={defaultMenu}
         theme={{ ...currentTheme }}
-        title="frameless app"
-        // onClose={() => elecWindow.close()}
-        onClose={() => enqueueSnackbar("close clicked", { variant: "error" })}
+        title="react frameless test"
+        onClose={() => elecWindow.close()}
         onMinimize={() => elecWindow.minimize()}
-        //onMaximize={() => elecWindow.maximize()}
         onMaximize={() => {
-          if (!elecWindow) {
-            document.body.requestFullscreen();
-            return;
-          }
           state.maximized ? elecWindow.unmaximize() : elecWindow.maximize();
         }}
         // when the titlebar is double clicked
@@ -121,6 +117,13 @@ const App = ({ theme, setPalette }) => {
           />
         }
       </TitleBar>
+
+      <video id="video-main" autoPlay name="media" loop controls>
+        <source
+          src="https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1280_10MG.mp4"
+          type="video/mp4"
+        />
+      </video>
     </div>
   );
 };

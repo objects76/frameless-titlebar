@@ -1,0 +1,4 @@
+appId: com.jjkim.frameless_title_bar
+publish:
+  provider: github
+  token: [adcb0058509e33c13a4e4724f773482fc472fe3b]

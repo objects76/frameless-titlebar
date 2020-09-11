@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+const ipc = window.ipcRenderer;
 
 const enqueue = (queueSnack) => (item, currentWindow, e) => {
   var label = `Item Clicked: ${item.label}!`;
@@ -13,18 +14,57 @@ const enqueue = (queueSnack) => (item, currentWindow, e) => {
   queueSnack(label, { variant });
 };
 
+const mainHandler = (item, currentWindow, e) => {
+  console.log("render:", item);
+  ipc.send("ipc-menu", item.label, item.type === "checkbox" && item.checked);
+};
+
+const renderHandler = async (item, currentWindow, e) => {
+  const { fullscreenScreenshot, getDesktopStream } = require("../screenshot");
+  switch (item.label) {
+    case "Full Screenshot":
+      fullscreenScreenshot(
+        null,
+        "image/jpeg",
+        await ipc.invoke("ipc-get", "app.userData")
+      );
+      break;
+    case "Start Desktop Stream":
+      {
+        const video = document.getElementById("video-main");
+        let stream = await getDesktopStream("Screen 2");
+        if (!stream) stream = await getDesktopStream("Screen 1");
+        if (!stream) stream = await getDesktopStream("Entire Screen");
+
+        video.srcObject = stream;
+        console.log(stream);
+        console.log(video.src);
+        video.play();
+        item.label = "Stop Desktop Stream";
+      }
+      break;
+
+    case "Stop Desktop Stream":
+      {
+        const video = document.getElementById("video-main");
+        if (video.srcObject) {
+          video.srcObject.getTracks()[0].stop();
+          video.srcObject = null;
+        }
+        item.label = "Start Desktop Stream";
+      }
+      break;
+    default:
+      console.log(item.label);
+      break;
+  }
+};
 const createMenu = (queueSnack) => {
   const click = enqueue(queueSnack);
   return [
     {
       label: "File",
       submenu: [
-        {
-          label: "Frameless Titlebar",
-          accelerator: "v2.0.0",
-          disabled: true,
-          click,
-        },
         {
           label: "New Window",
           click,
@@ -35,18 +75,11 @@ const createMenu = (queueSnack) => {
         },
         {
           type: "separator",
-          click,
-        },
-        {
-          label: "Resizeable",
-          checked: true,
-          type: "checkbox",
-          click,
         },
         {
           label: "Quit Application",
           accelerator: "Ctrl+Q",
-          click,
+          click: mainHandler,
         },
       ],
     },
@@ -134,43 +167,23 @@ const createMenu = (queueSnack) => {
       ],
     },
     {
-      label: "Test",
+      label: "Tool",
       submenu: [
         {
-          label: "Test One",
-          click,
+          label: "Full Screenshot",
+          click: renderHandler,
         },
         {
-          label:
-            "Lorem Ipsum cupcake ipsum dolor sit amet. Pastry jelly-o chupa chups. Sweet chocolate pie jujubes bear claw. Chocolate cake danish tootsie roll bonbon jelly tiramisu cookie fruitcake.",
-          accelerator: "Alt+7",
-          click,
+          label: "Open Data Folder",
+          click: mainHandler,
         },
         {
-          label: "Test Three",
-          submenu: [
-            {
-              label: "Depth 2",
-              submenu: [
-                {
-                  label: "Depth 3",
-                  click,
-                },
-                {
-                  label: "Test Five",
-                  click,
-                },
-              ],
-            },
-            {
-              label: "Test Six",
-              click,
-            },
-            {
-              label: "Test Seven",
-              click,
-            },
-          ],
+          label: "Start Desktop Stream",
+          click: renderHandler,
+        },
+        {
+          label: "Menu Item #1",
+          click: renderHandler,
         },
       ],
     },
@@ -179,47 +192,15 @@ const createMenu = (queueSnack) => {
       submenu: [
         {
           label: "Home Page",
-          click,
+          click: mainHandler,
         },
         {
           label: "Report an Issue",
-          click,
+          click: mainHandler,
         },
         {
           label: "About Frameless Titlebar",
-          click,
-        },
-      ],
-    },
-    {
-      label: "Random",
-      disabled: true,
-      subemnu: [
-        {
-          label: "Single Item",
-          click,
-        },
-      ],
-    },
-    {
-      label: "Overflow",
-      submenu: [
-        {
-          label: "Random 1",
-          click,
-        },
-      ],
-    },
-    {
-      label: "Random 2",
-      submenu: [
-        {
-          label: "Random 3",
-          click,
-        },
-        {
-          label: "Random 4",
-          click,
+          click: mainHandler,
         },
       ],
     },

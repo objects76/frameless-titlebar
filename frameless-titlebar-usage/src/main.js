@@ -1,6 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("path");
 const url = require("url");
+
+//const { notifyMe } = require("./notification");
 
 let mainWindow;
 
@@ -12,8 +14,8 @@ function createWindow() {
     height: 600,
     minWidth: 480,
     minHeight: 300,
-    // frame: false,
-    // show: false,
+    frame: false,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -42,7 +44,8 @@ function createWindow() {
   });
   mainWindow.once("ready-to-show", () => mainWindow.show());
 
-  //   mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
+  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
@@ -58,4 +61,32 @@ app.on("activate", function () {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+// ipc
+ipcMain.on("ipc-menu", (event, label, checked) => {
+  switch (label) {
+    case "Quit Application":
+      app.quit();
+      break;
+    case "Open Data Folder":
+      // shell.openExternal('https://github.com');
+      console.log("userData=", app.getPath("userData"));
+      shell.openExternal("file://" + app.getPath("userData"));
+      //shell.openItem(app.getPath("userData"));
+      break;
+    default:
+      console.log(`Item Clicked: ${label}, checked=${checked}`);
+      break;
+  }
+});
+
+//
+ipcMain.handle("ipc-get", async (event, path) => {
+  console.log("ipc-get:", path);
+  switch (path) {
+    case "app.userData":
+      return app.getPath("userData");
+  }
+  return null;
 });
