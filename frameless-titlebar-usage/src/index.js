@@ -8,7 +8,7 @@ import "./index.css";
 import App from "./react/App";
 
 const Root = () => {
-  const [paletteType, setPaletteType] = useState("light");
+  const [paletteType, setPaletteType] = useState("dark");
   const [theme, setTheme] = useState(changePalette(paletteType));
 
   useEffect(() => {

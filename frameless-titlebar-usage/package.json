@@ -56,8 +56,12 @@
       "buildResources": "public"
     },
     "target": "zip",
-    "publish": {
-      "provider": "github"
-    }
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "objects76",
+        "repo": "autoupdate1"
+      }
+    ]
   }
 }

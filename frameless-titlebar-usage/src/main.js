@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, shell } = require("electron");
+
 const path = require("path");
 const url = require("url");
 
@@ -33,6 +34,7 @@ function createWindow() {
       slashes: true,
     });
 
+  console.log("url:", startUrl);
   mainWindow.loadURL(startUrl);
 
   //   settings.loadWindowSettings(mainWindow, "main");
@@ -70,11 +72,14 @@ ipcMain.on("ipc-menu", (event, label, checked) => {
       app.quit();
       break;
     case "Open Data Folder":
-      // shell.openExternal('https://github.com');
       console.log("userData=", app.getPath("userData"));
       shell.openExternal("file://" + app.getPath("userData"));
-      //shell.openItem(app.getPath("userData"));
       break;
+    case "Toggle Full Screen": {
+      let win = BrowserWindow.getFocusedWindow();
+      win.setFullScreen(!win.isFullScreen());
+      break;
+    }
     default:
       console.log(`Item Clicked: ${label}, checked=${checked}`);
       break;

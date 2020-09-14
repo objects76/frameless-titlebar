@@ -156,8 +156,7 @@ const createMenu = (queueSnack) => {
       submenu: [
         {
           label: "Toggle Full Screen",
-          accelerator: "F11",
-          click,
+          click: mainHandler,
         },
         {
           label: "Toggle Developer Tools",

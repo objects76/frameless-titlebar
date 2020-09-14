@@ -6,8 +6,6 @@ import icon from "./icons/vscode-256.png";
 import Notification from "./components/notification";
 import { useMenu } from "./menu";
 
-const { getDesktopStream } = require("../screenshot");
-
 let elecWindow = null;
 if (require("is-electron")()) {
   if (!window.remote) {
@@ -42,14 +40,17 @@ const App = ({ theme, setPalette }) => {
       },
       item: {
         active: {
-          background: theme.palette.secondary.light,
+          //background: theme.palette.secondary.light,
+          background: "rgba(255,255,255,0.3)",
         },
       },
     },
     bar: {
       palette: "dark",
-      background: theme.palette.primary.dark,
-      borderBottom: "",
+      // background: theme.palette.primary.dark,
+      background: "#24292e",
+      // borderBottom: "",
+      borderBottom: "1px solid #333",
       icon: {
         width: 18,
         height: 18,
@@ -97,7 +98,15 @@ const App = ({ theme, setPalette }) => {
         elecWindow={elecWindow} // electron window instance
         platform={process.platform} // win32, darwin, linux
         menu={defaultMenu}
-        theme={{ ...currentTheme }}
+        //theme={{ ...currentTheme }}
+        theme={{
+          barTheme: "dark",
+          barBackgroundColor: "rgb(36, 37, 38)",
+          barColor: "rgb(230, 230, 230)",
+          menuHighlightColor: "#373277",
+          menuDimItems: true,
+          showIconDarLin: false,
+        }}
         title="react frameless test"
         onClose={() => elecWindow.close()}
         onMinimize={() => elecWindow.minimize()}
