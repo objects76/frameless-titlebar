@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, shell } = require("electron");
+const shortcut = require("electron-localshortcut");
 
 const path = require("path");
 const url = require("url");
@@ -28,8 +29,8 @@ function createWindow() {
   const startUrl =
     process.env.ELECTRON_START_URL ||
     url.format({
-      // pathname: path.join(__dirname, "../index.html"),
-      pathname: path.join(__dirname, "/../build/index.html"),
+      pathname: path.join(__dirname, "../../index.html"),
+      // pathname: path.join(__dirname, "/../build/index.html"),
       protocol: "file:",
       slashes: true,
     });
@@ -47,7 +48,18 @@ function createWindow() {
   mainWindow.once("ready-to-show", () => mainWindow.show());
 
   mainWindow.setMenu(null);
-  mainWindow.webContents.openDevTools();
+  shortcut.register(mainWindow, "F11", () => {
+    const win = BrowserWindow.getFocusedWindow();
+    win.setFullScreen(!win.isFullScreen());
+  });
+
+  shortcut.register(mainWindow, "F12", () => {
+    mainWindow.webContents.openDevTools();
+  });
+  shortcut.register(mainWindow, "F5", () => {
+    app.relaunch();
+    app.exit();
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -57,6 +69,11 @@ app.on("window-all-closed", function () {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("quit", () => {
+  // shortcut.unregister(mainWindow, "Ctrl+A");
+  shortcut.unregisterAll(mainWindow);
 });
 
 app.on("activate", function () {

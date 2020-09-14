@@ -2,14 +2,14 @@
   "name": "frameless-titlebar-usage",
   "version": "0.1.0",
   "private": true,
-  "main": "src/main.js",
+  "main": "src/elec/main.js",
   "homepage": "./",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "electron-localshortcut": "^3.2.1",
     "electron-updater": "^4.3.4",
     "frameless-titlebar": "^2.1.3",
     "is-electron": "^2.2.0",
@@ -21,12 +21,11 @@
   "scripts": {
     "start": "cross-env PORT=3600 BROWSER=none react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "wait-on http://localhost:3600 && cross-env ELECTRON_START_URL=http://localhost:3600 electron .",
-    "dist": "electron-builder --win --publish never",
-    "ship": "electron-builder --win --publish always",
-    "predist": "yarn build"
+    "dist": "npx electron-builder --win -c.extraMetadata.main=build/src/elec/main.js",
+    "predist": "./update-build.sh",
+    "asar-unpack": "npx asar extract dist/win-unpacked/resources/app.asar asar-unpack/"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,6 +49,11 @@
     "wait-on": "^5.2.0"
   },
   "build": {
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "productName": "frameless-titlebar-usage",
     "appId": "com.jjkim.framelesstitlebar",
     "extends": null,
     "directories": {

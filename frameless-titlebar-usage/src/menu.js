@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+const { fullscreenScreenshot, getDesktopStream } = require("./elec/screenshot");
 const ipc = window.ipcRenderer;
 
 const enqueue = (queueSnack) => (item, currentWindow, e) => {
@@ -20,7 +21,6 @@ const mainHandler = (item, currentWindow, e) => {
 };
 
 const renderHandler = async (item, currentWindow, e) => {
-  const { fullscreenScreenshot, getDesktopStream } = require("../screenshot");
   switch (item.label) {
     case "Full Screenshot":
       fullscreenScreenshot(
@@ -159,8 +159,8 @@ const createMenu = (queueSnack) => {
           click: mainHandler,
         },
         {
-          label: "Toggle Developer Tools",
-          accelerator: "Ctrl+Shift+I",
+          label: "Open Developer Tools",
+          accelerator: "F12",
           click,
         },
       ],
