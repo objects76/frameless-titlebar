@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-const { fullscreenScreenshot, getDesktopStream } = require("./elec/screenshot");
+const {
+  fullscreenScreenshot,
+  getDesktopStream,
+} = require("../elec/screenshot");
 const ipc = window.ipcRenderer;
 
 const enqueue = (queueSnack) => (item, currentWindow, e) => {

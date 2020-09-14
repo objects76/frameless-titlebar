@@ -25,6 +25,7 @@
     "dev": "wait-on http://localhost:3600 && cross-env ELECTRON_START_URL=http://localhost:3600 electron .",
     "dist": "npx electron-builder --win -c.extraMetadata.main=build/src/elec/main.js",
     "predist": "./update-build.sh",
+    "elec-copy": "mkdir build/src && cp -r src/elec/. build/src/elec",
     "asar-unpack": "npx asar extract dist/win-unpacked/resources/app.asar asar-unpack/"
   },
   "eslintConfig": {

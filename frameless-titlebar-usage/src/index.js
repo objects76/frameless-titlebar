@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { changePalette } from "./theme";
+import { changePalette } from "./react/theme";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
 
 import "./index.css";
-import App from "./App";
+import App from "./react/App";
 
 const Root = () => {
   const [paletteType, setPaletteType] = useState("dark");

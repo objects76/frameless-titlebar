@@ -8,7 +8,7 @@ const path = window.require("path");
  * @param imageFormat {String} Format of the image to generate ('image/jpeg' or 'image/png')
  **/
 
-module.exports.getDesktopStream = async function (sourceName) {
+async function getDesktopStream(sourceName) {
   try {
     const sources = await desktopCapturer.getSources({
       types: ["screen"],
@@ -43,13 +43,9 @@ module.exports.getDesktopStream = async function (sourceName) {
   }
 
   return null;
-};
+}
 
-module.exports.fullscreenScreenshot = async function (
-  callback,
-  imageFormat,
-  userFolder
-) {
+async function fullscreenScreenshot(callback, imageFormat, userFolder) {
   var _this = this;
   this.callback = callback;
   imageFormat = imageFormat || "image/jpeg";
@@ -142,4 +138,9 @@ module.exports.fullscreenScreenshot = async function (
       }
     }
   });
+}
+
+module.exports = {
+  getDesktopStream,
+  fullscreenScreenshot,
 };
